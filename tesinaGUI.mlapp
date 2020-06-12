@@ -1,0 +1,1328 @@
+classdef tesinaGUI < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        SLRSignalAnalysisUIFigure       matlab.ui.Figure
+        TabGroup                        matlab.ui.container.TabGroup
+        StartTab                        matlab.ui.container.Tab
+        STARTANALYZINGButton            matlab.ui.control.Button
+        CANCELButton_5                  matlab.ui.control.Button
+        Image                           matlab.ui.control.Image
+        Button                          matlab.ui.control.Button
+        HelpTab                         matlab.ui.container.Tab
+        HelpLabel                       matlab.ui.control.Label
+        ParametersTabLabel              matlab.ui.control.Label
+        HTML                            matlab.ui.control.HTML
+        CreatedSignalsTabLabel          matlab.ui.control.Label
+        HTML_2                          matlab.ui.control.HTML
+        FilterParametersTabLabel        matlab.ui.control.Label
+        HTML_3                          matlab.ui.control.HTML
+        FilteredSignalsTabLabel         matlab.ui.control.Label
+        HTML_4                          matlab.ui.control.HTML
+        HTML2                           matlab.ui.control.HTML
+        HTML2_2                         matlab.ui.control.HTML
+        HTML2_3                         matlab.ui.control.HTML
+        BACKButton                      matlab.ui.control.Button
+        ParametersTab                   matlab.ui.container.Tab
+        DetermineSignalParametersLabel  matlab.ui.control.Label
+        sinxCheckBox                    matlab.ui.control.CheckBox
+        sinxCheckBox_2                  matlab.ui.control.CheckBox
+        sinxCheckBox_3                  matlab.ui.control.CheckBox
+        sinxCheckBox_4                  matlab.ui.control.CheckBox
+        sinxCheckBox_5                  matlab.ui.control.CheckBox
+        CANCELButton                    matlab.ui.control.Button
+        CREATEButton                    matlab.ui.control.Button
+        SlopemmyrEditFieldLabel         matlab.ui.control.Label
+        SlopemmyrEditField              matlab.ui.control.NumericEditField
+        AmplitudeLabel                  matlab.ui.control.Label
+        AmplitudeEditField              matlab.ui.control.NumericEditField
+        AmplitudeEditField_7Label       matlab.ui.control.Label
+        AmplitudeEditField_2            matlab.ui.control.NumericEditField
+        AmplitudeEditField_8Label       matlab.ui.control.Label
+        AmplitudeEditField_3            matlab.ui.control.NumericEditField
+        AmplitudeEditField_9Label       matlab.ui.control.Label
+        AmplitudeEditField_4            matlab.ui.control.NumericEditField
+        AmplitudeEditField_10Label      matlab.ui.control.Label
+        AmplitudeEditField_5            matlab.ui.control.NumericEditField
+        FrequencyEditFieldLabel         matlab.ui.control.Label
+        FrequencyEditField              matlab.ui.control.NumericEditField
+        FrequencyEditField_2Label       matlab.ui.control.Label
+        FrequencyEditField_2            matlab.ui.control.NumericEditField
+        FrequencyEditField_3Label       matlab.ui.control.Label
+        FrequencyEditField_3            matlab.ui.control.NumericEditField
+        FrequencyEditField_4Label       matlab.ui.control.Label
+        FrequencyEditField_4            matlab.ui.control.NumericEditField
+        FrequencyEditField_5Label       matlab.ui.control.Label
+        FrequencyEditField_5            matlab.ui.control.NumericEditField
+        PhaseEditFieldLabel             matlab.ui.control.Label
+        PhaseEditField                  matlab.ui.control.NumericEditField
+        PhaseEditField_2Label           matlab.ui.control.Label
+        PhaseEditField_2                matlab.ui.control.NumericEditField
+        PhaseEditField_3Label           matlab.ui.control.Label
+        PhaseEditField_3                matlab.ui.control.NumericEditField
+        PhaseEditField_4Label           matlab.ui.control.Label
+        PhaseEditField_4                matlab.ui.control.NumericEditField
+        PhaseEditField_5Label           matlab.ui.control.Label
+        PhaseEditField_5                matlab.ui.control.NumericEditField
+        Button_2                        matlab.ui.control.Button
+        CreatedSignalsTab               matlab.ui.container.Tab
+        CreatedSignalsLabel             matlab.ui.control.Label
+        UIAxes                          matlab.ui.control.UIAxes
+        UIAxes2                         matlab.ui.control.UIAxes
+        CANCELButton_2                  matlab.ui.control.Button
+        NEXTButton                      matlab.ui.control.Button
+        GOBACKButton                    matlab.ui.control.Button
+        Button_3                        matlab.ui.control.Button
+        FilterParamsTab                 matlab.ui.container.Tab
+        FilterSignalParametersLabel     matlab.ui.control.Label
+        TimescaleYearsEditFieldLabel    matlab.ui.control.Label
+        TimescaleYearsEditField         matlab.ui.control.NumericEditField
+        CANCELButton_3                  matlab.ui.control.Button
+        FILTERButton                    matlab.ui.control.Button
+        GOBACKButton_2                  matlab.ui.control.Button
+        SelectaFilterLabel              matlab.ui.control.Label
+        BoxcarFilterCheckBox            matlab.ui.control.CheckBox
+        SincFilterCheckBox              matlab.ui.control.CheckBox
+        SelectaSeriesLabel              matlab.ui.control.Label
+        TimeSeriesCheckBox              matlab.ui.control.CheckBox
+        PowerSpectrumCheckBox           matlab.ui.control.CheckBox
+        Button_4                        matlab.ui.control.Button
+        Label                           matlab.ui.control.Label
+        FilteredSignalsTab              matlab.ui.container.Tab
+        FilteredSignalsLabel            matlab.ui.control.Label
+        UIAxes_2                        matlab.ui.control.UIAxes
+        UIAxes2_2                       matlab.ui.control.UIAxes
+        CANCELButton_4                  matlab.ui.control.Button
+        NEXTButton_2                    matlab.ui.control.Button
+        GOBACKButton_3                  matlab.ui.control.Button
+        Button_5                        matlab.ui.control.Button
+        SignalAnalysisTab               matlab.ui.container.Tab
+        AnalyzingtheFilteredSignalsLabel  matlab.ui.control.Label
+        HTML4                           matlab.ui.control.HTML
+        FINISHButton                    matlab.ui.control.Button
+        GOBACKButton_4                  matlab.ui.control.Button
+    end
+
+  properties (Access = public)
+      % variables that need to be used throughout different methods in the
+      % application
+      totalSignal
+      time
+      powerSignal
+      selectedFilter
+      selectedSeries
+  end
+
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Value changed function: sinxCheckBox
+        function sinxCheckBoxValueChanged(app, event)
+            % if the sinx checkbox is selected all the input fields turn
+            % enabled; if it is unchecked they turn unenabled
+            value = app.sinxCheckBox.Value;
+            app.AmplitudeEditField.Enable = true;
+            app.AmplitudeEditField.Editable = true;
+            app.FrequencyEditField.Enable = true;
+            app.PhaseEditField.Enable = true;
+            if(value == false)
+                app.AmplitudeEditField.Enable = false;
+                app.FrequencyEditField.Enable = false;
+                app.PhaseEditField.Enable = false;               
+                app.AmplitudeEditField.Value = 0;
+                app.FrequencyEditField.Value = 0;
+                app.PhaseEditField.Value = 0;
+            end
+
+        end
+
+        % Value changed function: sinxCheckBox_2
+        function sinxCheckBox_2ValueChanged(app, event)
+            % if the sinx checkbox is selected all the input fields turn
+            % enabled; if it is unchecked they turn unenabled
+            value = app.sinxCheckBox_2.Value;
+            app.AmplitudeEditField_2.Enable = true;
+            app.FrequencyEditField_2.Enable = true;
+            app.PhaseEditField_2.Enable = true;
+            if(value == false)
+                app.AmplitudeEditField_2.Enable = false;
+                app.FrequencyEditField_2.Enable = false;
+                app.PhaseEditField_2.Enable = false;
+                app.AmplitudeEditField_2.Value = 0;
+                app.FrequencyEditField_2.Value = 0;
+                app.PhaseEditField_2.Value = 0;
+            end
+        end
+
+        % Value changed function: sinxCheckBox_3
+        function sinxCheckBox_3ValueChanged(app, event)
+            % if the sinx checkbox is selected all the input fields turn
+            % enabled; if it is unchecked they turn unenabled
+            value = app.sinxCheckBox_3.Value;
+            app.AmplitudeEditField_3.Enable = true;
+            app.FrequencyEditField_3.Enable = true;
+            app.PhaseEditField_3.Enable = true;          
+            if(value == false)
+                app.AmplitudeEditField_3.Enable = false;              
+                app.FrequencyEditField_3.Enable = false;              
+                app.PhaseEditField_3.Enable = false;
+                app.AmplitudeEditField_3.Value = 0;
+                app.FrequencyEditField_3.Value = 0;
+                app.PhaseEditField_3.Value = 0;
+            end
+        end
+
+        % Value changed function: sinxCheckBox_4
+        function sinxCheckBox_4ValueChanged(app, event)
+            % if the sinx checkbox is selected all the input fields turn
+            % enabled; if it is unchecked they turn unenabled
+            value = app.sinxCheckBox_4.Value;
+            app.AmplitudeEditField_4.Enable = true;
+            app.FrequencyEditField_4.Enable = true;
+            app.PhaseEditField_4.Enable = true;
+            if(value == false)
+                app.AmplitudeEditField_4.Enable = false;
+                app.FrequencyEditField_4.Enable = false;
+                app.PhaseEditField_4.Enable = false;
+                app.AmplitudeEditField_4.Value = 0;
+                app.FrequencyEditField_4.Value = 0;
+                app.PhaseEditField_4.Value = 0;
+            end
+        end
+
+        % Value changed function: sinxCheckBox_5
+        function sinxCheckBox_5ValueChanged(app, event)
+            % if the sinx checkbox is selected all the input fields turn
+            % enabled; if it is unchecked they turn unenabled
+            value = app.sinxCheckBox_5.Value;
+            app.AmplitudeEditField_5.Enable = true;
+            app.FrequencyEditField_5.Enable = true;
+            app.PhaseEditField_5.Enable = true;
+            if(value == false)
+                app.AmplitudeEditField_5.Enable = false;
+                app.FrequencyEditField_5.Enable = false;
+                app.PhaseEditField_5.Enable = false;
+                app.AmplitudeEditField_5.Value = 0;
+                app.FrequencyEditField_5.Value = 0;
+                app.PhaseEditField_5.Value = 0;
+            end
+        end
+
+        % Button pushed function: CANCELButton, CANCELButton_2, 
+        % CANCELButton_3, CANCELButton_4, CANCELButton_5
+        function CANCELButtonPushed(app, event)
+             delete(app.SLRSignalAnalysisUIFigure);
+        end
+
+        % Button pushed function: CREATEButton
+        function CREATEButtonPushed(app, event)
+            app.TabGroup.SelectedTab = app.CreatedSignalsTab;
+            
+            ampl_01 = app.AmplitudeEditField.Value;
+            ampl_02 = app.AmplitudeEditField_2.Value;
+            ampl_03 = app.AmplitudeEditField_3.Value;
+            ampl_04 = app.AmplitudeEditField_4.Value;
+            ampl_05 = app.AmplitudeEditField_5.Value;
+            
+            totalAmp = ampl_01 + ampl_02 + ampl_03 + ampl_04 + ampl_05;
+            
+            freq_01 = app.FrequencyEditField.Value;
+            freq_02 = app.FrequencyEditField_2.Value;
+            freq_03 = app.FrequencyEditField_3.Value;
+            freq_04 = app.FrequencyEditField_4.Value;
+            freq_05 = app.FrequencyEditField_5.Value;
+            
+            totalFreq = freq_01 + freq_02 + freq_03 + freq_04 + freq_05;
+            
+            phase_01 = app.PhaseEditField.Value;
+            phase_02 = app.PhaseEditField_2.Value;
+            phase_03 = app.PhaseEditField_3.Value;
+            phase_04 = app.PhaseEditField_4.Value;
+            phase_05 = app.PhaseEditField_5.Value;
+            
+            totalPhase = phase_01 + phase_02 + phase_03 + phase_04 + phase_05;
+            
+            app.time = 0:2*pi/16:totalFreq;
+            
+            app.totalSignal = 0;
+            
+            %% function -- A * sin(f * t + ph)
+            
+            signal1 = ampl_01 * sin(freq_01 * app.time + phase_01);
+            app.totalSignal = app.totalSignal + signal1;
+            
+            signal2 = ampl_02 * sin(freq_02 * app.time + phase_02);
+            app.totalSignal = app.totalSignal + signal2;
+            
+            signal3 = ampl_03 * sin(freq_03 * app.time + phase_03);
+            app.totalSignal = app.totalSignal + signal3;
+            
+            signal4 = ampl_04 * sin(freq_04 * app.time + phase_04);
+            app.totalSignal = app.totalSignal + signal4;
+            
+            signal5 = ampl_05 * sin(freq_05 * app.time + phase_05);
+            app.totalSignal = app.totalSignal + signal5;
+           
+            app.totalSignal = app.totalSignal + randn(1, length(app.totalSignal));
+            
+            slope = app.SlopemmyrEditField.Value;
+            trend = slope * app.time;
+            
+            % 1 / totalFreq --> helps create the power spectrum
+            
+            x = totalAmp * sin((1 /totalFreq) * app.time + totalPhase);
+            app.powerSignal = periodogram(x);
+            
+            %% time series plot
+            
+            plot(app.UIAxes, app.time, app.totalSignal, 'k');
+            hold(app.UIAxes, 'on');
+            
+            % power spectrum plot 
+            
+            loglog(app.UIAxes2, app.powerSignal, 'k');
+            hold(app.UIAxes2, 'on');
+            
+            
+         
+        end
+
+        % Button pushed function: GOBACKButton
+        function GOBACKButtonPushed(app, event)
+        % If the user clicks on the Go Back Button - all the parameters value turn to 0   
+            app.TabGroup.SelectedTab = app.ParametersTab;
+            
+            app.AmplitudeEditField.Value = 0;
+            app.AmplitudeEditField_2.Value = 0;
+            app.AmplitudeEditField_3.Value = 0;
+            app.AmplitudeEditField_4.Value = 0;
+            app.AmplitudeEditField_5.Value = 0;
+            
+            app.FrequencyEditField.Value = 0;
+            app.FrequencyEditField_2.Value = 0;
+            app.FrequencyEditField_3.Value = 0;
+            app.FrequencyEditField_4.Value = 0;
+            app.FrequencyEditField_5.Value = 0;
+            
+            app.PhaseEditField.Value = 0;
+            app.PhaseEditField_2.Value = 0;
+            app.PhaseEditField_3.Value = 0;
+            app.PhaseEditField_4.Value = 0;
+            app.PhaseEditField_5.Value = 0;
+            
+            hold(app.UIAxes, 'off');
+            hold(app.UIAxes2, 'off');
+
+        end
+
+        % Button pushed function: NEXTButton
+        function NEXTButtonPushed(app, event)
+            app.TabGroup.SelectedTab = app.FilterParamsTab;
+        end
+
+        % Button pushed function: FILTERButton
+        function FILTERButtonPushed(app, event)
+            app.TabGroup.SelectedTab = app.FilteredSignalsTab;
+            
+            % variables used in the distinct filters
+            filterYrs = app.TimescaleYearsEditField.Value;
+            
+            if filterYrs == 0
+                filterYrs = 1;
+            end
+            
+            points = 2 * filterYrs * 365 + 1;
+            if points / 2 == fix(points/2)
+                points = points + 1;
+            end
+            
+            filterYrsInDays = filterYrs * 365; 
+            frequency1 = 1 / (filterYrsInDays); 
+
+            windowSize = filterYrs;
+            b = (1 / windowSize) * ones(1, windowSize);
+            a = 1;
+            
+            disp(frequency1 * 1000 * filterYrs);
+            disp(length(app.totalSignal));
+            
+            %% TODO - terminar la logica [linear regression (total signal), poner los limites de los filtros]
+            
+            if (strcmp(app.selectedSeries, 'Time Series') && strcmp(app.selectedFilter, 'Boxcar Filter')) || (strcmp(app.selectedSeries, '') && strcmp(app.selectedFilter, ''))
+                %% Time Series (w/out filters)
+                plot(app.UIAxes_2, app.totalSignal, 'LineWidth', 0.8,'Color','k');
+                hold(app.UIAxes_2,'on');
+                
+                %% Time Series (with filters)
+                filterTimeSeries = filter(b, a, app.totalSignal);
+                
+                modelF = fitlm(app.totalSignal(filterYrsInDays & size(app.totalSignal)), filterTimeSeries(filterYrsInDays & size(filterTimeSeries)), 'linear');
+                SLRregression = modelF.Coefficients.Estimate(2)*points/100;
+                
+                plot(app.UIAxes_2, filterTimeSeries, 'LineWidth', 1,'Color','b');
+                plot(app.UIAxes_2, modelF.Coefficients.Estimate(2) * filterTimeSeries + modelF.Coefficients.Estimate(1), 'y');
+                loglog(app.UIAxes_2, [(filterYrsInDays/4) (filterYrsInDays/4)], [-filterYrs filterYrs], 'LineWidth', 2,'Color','r');
+                plot(app.UIAxes_2, [((points/2) - (filterYrsInDays/4)) ((points/2) - (filterYrsInDays/4))], [-filterYrs filterYrs], 'LineWidth', 2,'Color','r');
+                txt = ['SLR estimate: ', num2str(abs(SLRregression)), 'mm/yr'];
+                text(app.UIAxes_2, 100 , (filterYrs + 3), txt);
+                hold(app.UIAxes_2, 'off');
+                legend(app.UIAxes_2, 'Total Signal', 'Boxcar Filter Signal', 'Linear Regression', 'Filter and Effect', 'Location',"southwest");
+                
+                %% Power Spectrum
+                loglog(app.UIAxes2_2, app.powerSignal,'LineWidth', 1,'Color', 'k');
+                hold(app.UIAxes2_2, 'on');
+                legend(app.UIAxes2_2, 'Power Spectrum', 'Location',"southwest");
+                
+            end 
+            
+            % IMPROVEMENT NEEDED: linear regression
+            if strcmp(app.selectedSeries, 'Time Series') && strcmp(app.selectedFilter, 'Sinc Filter')
+                %% Time Series (w/out filters)
+                plot(app.UIAxes_2, app.totalSignal, 'LineWidth', 0.8, 'Color', 'k');
+                hold(app.UIAxes_2,'on');
+                
+                %% Time Series (with filters)
+                sincTotalSignal = sinc(app.totalSignal);
+                filterSincSignal = filter(b, a, sincTotalSignal);
+                
+                modelF = fitlm(app.totalSignal(filterYrsInDays & size(app.totalSignal)), filterSincSignal(filterYrsInDays & size(filterSincSignal)), 'linear');
+                SLRregression = modelF.Coefficients.Estimate(2)*1000;
+                
+                plot(app.UIAxes_2, filterSincSignal, 'LineWidth', 1, 'Color', 'b');
+                plot(app.UIAxes_2,modelF.Coefficients.Estimate(2) * filterSincSignal + modelF.Coefficients.Estimate(1), 'LineWidth', 2,'Color','y');
+                
+                % plotting of filter limits
+                loglog(app.UIAxes_2, [(filterYrsInDays/4) (filterYrsInDays/4)], [-filterYrs filterYrs], 'LineWidth', 2,'Color','r');
+                plot(app.UIAxes_2, [((points/2) - (filterYrsInDays/4)) ((points/2) - (filterYrsInDays/4))], [-filterYrs filterYrs], 'LineWidth', 2,'Color','r');
+                txt = ['SLR estimate: ', num2str(abs(SLRregression)), 'mm/yr'];
+                text(app.UIAxes_2, 100 , (filterYrs + 3.5), txt);
+                hold(app.UIAxes_2, "off");
+                
+                legend(app.UIAxes_2, 'Total Signal', 'Sinc Filter Signal', 'Linear Regression', 'Filters and Effect', 'Location',"southwest");
+                
+                %% Power Spectrum
+                loglog(app.UIAxes2_2, app.powerSignal,'LineWidth', 0.8,'Color', 'k');
+                legend(app.UIAxes2_2, 'Power Spectrum', 'Location',"southwest");
+                hold(app.UIAxes2_2, 'on');
+            end
+            
+            if strcmp(app.selectedSeries, 'Power Spectrum') && strcmp(app.selectedFilter, 'Boxcar Filter')
+                %% Time Series
+                plot(app.UIAxes_2, app.totalSignal, 'k');
+                legend(app.UIAxes_2, 'Total Signal', 'Location',"southwest");
+                hold(app.UIAxes_2,'on');
+                
+                %% Power Spectrum (w/out filters)
+                loglog(app.UIAxes2_2, app.powerSignal,'LineWidth', 0.8,'Color', 'k');
+                hold(app.UIAxes2_2, 'on');
+                
+                %% Power Spectrum (with filters)
+                filterBoxcarSpectrum = filter(b, a, app.powerSignal);
+                loglog(app.UIAxes2_2, filterBoxcarSpectrum,'LineWidth', 1,'Color','r');
+                loglog(app.UIAxes2_2, [filterYrs filterYrs], [10e-5 10e3], 'LineWidth', 1,'Color', 'g');
+                
+                hold(app.UIAxes2_2, 'off');
+                legend(app.UIAxes2_2, 'Power Spectrum', 'Boxcar Filter Spectrum', 'Cutoff - Filter Years','Location',"northeast");
+            end
+            
+            % fix - sinc filter ; DONE: cutoff filter 
+            if strcmp(app.selectedSeries, 'Power Spectrum') && strcmp(app.selectedFilter, 'Sinc Filter')
+                %% Time Series
+                plot(app.UIAxes_2, app.totalSignal, 'k');
+                legend(app.UIAxes_2, 'Total Signal', 'Location',"southwest");
+                hold(app.UIAxes_2,'on');
+                
+               %% Power Spectrum (w/out filters)
+                loglog(app.UIAxes2_2, app.powerSignal,'LineWidth', 0.8,'Color', 'k');
+                hold(app.UIAxes2_2, 'on');
+                
+                %% Power Spectrum (with filters)
+                fftSpectrum = lowpass(app.powerSignal,frequency1);
+                
+                filterSincSpectrum = filter(b, a, fftSpectrum);
+                loglog(app.UIAxes2_2, fftSpectrum,'LineWidth', 1,'Color','r');
+                loglog(app.UIAxes2_2, [filterYrs filterYrs], [10e-3 10e3], 'LineWidth', 1,'Color', 'g');
+          
+                hold(app.UIAxes2_2, 'off');
+                legend(app.UIAxes2_2, 'Power Spectrum', 'Sinc Filter Spectrum', 'Cutoff - Filter Years','Location',"northeast");
+            end
+            
+            
+            
+        end
+
+        % Button pushed function: GOBACKButton_2
+        function GOBACKButton_2Pushed(app, event)
+            app.TabGroup.SelectedTab = app.CreatedSignalsTab;
+        end
+
+        % Button pushed function: GOBACKButton_3
+        function GOBACKButton_3Pushed(app, event)
+            app.TabGroup.SelectedTab = app.FilterParamsTab;
+        end
+
+        % Button pushed function: STARTANALYZINGButton
+        function STARTANALYZINGButtonPushed(app, event)
+            app.TabGroup.SelectedTab = app.ParametersTab;
+        end
+
+        % Value changed function: BoxcarFilterCheckBox
+        function BoxcarFilterCheckBoxValueChanged(app, event)
+            value = app.BoxcarFilterCheckBox.Value;
+            
+            if (value == true)
+                app.selectedFilter = 'Boxcar Filter';
+                app.SincFilterCheckBox.Enable = false;
+            else
+                app.selectedFilter = '';
+                app.SincFilterCheckBox.Enable = true;
+            end
+        end
+
+        % Value changed function: SincFilterCheckBox
+        function SincFilterCheckBoxValueChanged(app, event)
+            value = app.SincFilterCheckBox.Value;
+            
+            if (value == true)
+                app.selectedFilter = 'Sinc Filter';
+                app.BoxcarFilterCheckBox.Enable = false;
+            else
+                app.selectedFilter = '';
+                app.BoxcarFilterCheckBox.Enable = true;
+            end
+        end
+
+        % Value changed function: TimeSeriesCheckBox
+        function TimeSeriesCheckBoxValueChanged(app, event)
+            value = app.TimeSeriesCheckBox.Value;
+            
+            if (value == true)
+                app.selectedSeries = 'Time Series';
+                app.PowerSpectrumCheckBox.Enable = false;
+            else
+                app.selectedSeries = '';
+                app.PowerSpectrumCheckBox.Enable = true;
+            end
+        end
+
+        % Value changed function: PowerSpectrumCheckBox
+        function PowerSpectrumCheckBoxValueChanged(app, event)
+            value = app.PowerSpectrumCheckBox.Value;
+            
+            if (value == true)
+                app.selectedSeries = 'Power Spectrum';
+                app.TimeSeriesCheckBox.Enable = false;
+            else
+                app.selectedSeries = '';
+                app.TimeSeriesCheckBox.Enable = true;
+            end
+        end
+
+        % Button pushed function: Button, Button_2
+        function ButtonPushed(app, event)
+            app.TabGroup.SelectedTab = app.HelpTab;
+        end
+
+        % Button pushed function: BACKButton
+        function BACKButtonPushed(app, event)
+            app.TabGroup.SelectedTab = app.ParametersTab;
+        end
+
+        % Button pushed function: NEXTButton_2
+        function NEXTButton_2Pushed(app, event)
+            app.TabGroup.SelectedTab = app.SignalAnalysisTab;
+        end
+
+        % Button pushed function: GOBACKButton_4
+        function GOBACKButton_4Pushed(app, event)
+            app.TabGroup.SelectedTab = app.FilteredSignalsTab;
+        end
+
+        % Button pushed function: FINISHButton
+        function FINISHButtonPushed(app, event)
+            delete(app.SLRSignalAnalysisUIFigure);
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create SLRSignalAnalysisUIFigure and hide until all components are created
+            app.SLRSignalAnalysisUIFigure = uifigure('Visible', 'off');
+            app.SLRSignalAnalysisUIFigure.AutoResizeChildren = 'off';
+            app.SLRSignalAnalysisUIFigure.Color = [0.902 0.902 0.902];
+            app.SLRSignalAnalysisUIFigure.Position = [100 100 768 412];
+            app.SLRSignalAnalysisUIFigure.Name = 'SLR Signal Analysis';
+            app.SLRSignalAnalysisUIFigure.Resize = 'off';
+
+            % Create TabGroup
+            app.TabGroup = uitabgroup(app.SLRSignalAnalysisUIFigure);
+            app.TabGroup.AutoResizeChildren = 'off';
+            app.TabGroup.Position = [1 1 768 440];
+
+            % Create StartTab
+            app.StartTab = uitab(app.TabGroup);
+            app.StartTab.AutoResizeChildren = 'off';
+            app.StartTab.Title = 'Start';
+
+            % Create STARTANALYZINGButton
+            app.STARTANALYZINGButton = uibutton(app.StartTab, 'push');
+            app.STARTANALYZINGButton.ButtonPushedFcn = createCallbackFcn(app, @STARTANALYZINGButtonPushed, true);
+            app.STARTANALYZINGButton.BackgroundColor = [0.502 0.8314 0.3608];
+            app.STARTANALYZINGButton.FontSize = 14;
+            app.STARTANALYZINGButton.FontWeight = 'bold';
+            app.STARTANALYZINGButton.FontAngle = 'italic';
+            app.STARTANALYZINGButton.Position = [312 90 143 26];
+            app.STARTANALYZINGButton.Text = 'START ANALYZING';
+
+            % Create CANCELButton_5
+            app.CANCELButton_5 = uibutton(app.StartTab, 'push');
+            app.CANCELButton_5.ButtonPushedFcn = createCallbackFcn(app, @CANCELButtonPushed, true);
+            app.CANCELButton_5.BackgroundColor = [0.9804 0.2353 0.2353];
+            app.CANCELButton_5.FontName = 'Lucida Sans';
+            app.CANCELButton_5.FontSize = 14;
+            app.CANCELButton_5.FontWeight = 'bold';
+            app.CANCELButton_5.FontAngle = 'italic';
+            app.CANCELButton_5.Position = [312 40 143 26];
+            app.CANCELButton_5.Text = 'CANCEL';
+
+            % Create Image
+            app.Image = uiimage(app.StartTab);
+            app.Image.Position = [125 148 517 238];
+            app.Image.ImageSource = 'innovations.png';
+
+            % Create Button
+            app.Button = uibutton(app.StartTab, 'push');
+            app.Button.ButtonPushedFcn = createCallbackFcn(app, @ButtonPushed, true);
+            app.Button.Icon = 'help.png';
+            app.Button.Tooltip = {'Help'};
+            app.Button.Position = [17 376 23 22];
+            app.Button.Text = '';
+
+            % Create HelpTab
+            app.HelpTab = uitab(app.TabGroup);
+            app.HelpTab.Title = 'HelpTab';
+
+            % Create HelpLabel
+            app.HelpLabel = uilabel(app.HelpTab);
+            app.HelpLabel.BackgroundColor = [1 1 1];
+            app.HelpLabel.HorizontalAlignment = 'center';
+            app.HelpLabel.FontName = 'Helvetica Neue';
+            app.HelpLabel.FontSize = 24;
+            app.HelpLabel.FontWeight = 'bold';
+            app.HelpLabel.FontAngle = 'italic';
+            app.HelpLabel.Position = [67 360 633 40];
+            app.HelpLabel.Text = 'Help';
+
+            % Create ParametersTabLabel
+            app.ParametersTabLabel = uilabel(app.HelpTab);
+            app.ParametersTabLabel.BackgroundColor = [1 1 1];
+            app.ParametersTabLabel.FontSize = 15;
+            app.ParametersTabLabel.FontAngle = 'italic';
+            app.ParametersTabLabel.Position = [37 286 130 22];
+            app.ParametersTabLabel.Text = '  Parameters Tab:  ';
+
+            % Create HTML
+            app.HTML = uihtml(app.HelpTab);
+            app.HTML.HTMLSource = '<p style="font-family: Helvetica; font-size: 15px">Select the amount of sin functions desired to create the signal that will be processed with its distinct parameters:<ul style="font-family: Helvetica; font-size: 15px"> <li> Amplitude (meters) </li><li> Frequency (cycles per day)</li> <li> Phase (meters) </li> </ul></p>';
+            app.HTML.Position = [228 223 375 123];
+
+            % Create CreatedSignalsTabLabel
+            app.CreatedSignalsTabLabel = uilabel(app.HelpTab);
+            app.CreatedSignalsTabLabel.BackgroundColor = [1 1 1];
+            app.CreatedSignalsTabLabel.FontSize = 15;
+            app.CreatedSignalsTabLabel.FontAngle = 'italic';
+            app.CreatedSignalsTabLabel.Position = [37 195 160 22];
+            app.CreatedSignalsTabLabel.Text = '  Created Signals Tab:  ';
+
+            % Create HTML_2
+            app.HTML_2 = uihtml(app.HelpTab);
+            app.HTML_2.HTMLSource = '<p style="font-family: Helvetica; font-size: 15px">Demonstrates the generated signals based on the parameters entered on the <span style="font-weight: 600">Parameters Tab</span></p>';
+            app.HTML_2.Position = [228 183 358 41];
+
+            % Create FilterParametersTabLabel
+            app.FilterParametersTabLabel = uilabel(app.HelpTab);
+            app.FilterParametersTabLabel.BackgroundColor = [1 1 1];
+            app.FilterParametersTabLabel.FontSize = 15;
+            app.FilterParametersTabLabel.FontAngle = 'italic';
+            app.FilterParametersTabLabel.Position = [37 120 167 22];
+            app.FilterParametersTabLabel.Text = '  Filter Parameters Tab:  ';
+
+            % Create HTML_3
+            app.HTML_3 = uihtml(app.HelpTab);
+            app.HTML_3.HTMLSource = '<p style="font-family: Helvetica; font-size: 15px">Enter the amount of years that will be used to filter the generated signals in <span style="font-weight: 600"> Created Signals</span> and select which filter you would like to apply to the signals.</p>';
+            app.HTML_3.Position = [228 103 358 57];
+
+            % Create FilteredSignalsTabLabel
+            app.FilteredSignalsTabLabel = uilabel(app.HelpTab);
+            app.FilteredSignalsTabLabel.BackgroundColor = [1 1 1];
+            app.FilteredSignalsTabLabel.FontSize = 15;
+            app.FilteredSignalsTabLabel.FontAngle = 'italic';
+            app.FilteredSignalsTabLabel.Position = [37 52 156 22];
+            app.FilteredSignalsTabLabel.Text = '  Filtered Signals Tab:  ';
+
+            % Create HTML_4
+            app.HTML_4 = uihtml(app.HelpTab);
+            app.HTML_4.HTMLSource = '<p style="font-family: Helvetica; font-size: 15px">Demonstrates the filtered signals based on the timescale entered and filter selected on the <span style="font-weight: 600">Filter Parameters Tab</span></p>';
+            app.HTML_4.Position = [228 29 358 55];
+
+            % Create HTML2
+            app.HTML2 = uihtml(app.HelpTab);
+            app.HTML2.HTMLSource = '<hr/>';
+            app.HTML2.Position = [37 216 566 25];
+
+            % Create HTML2_2
+            app.HTML2_2 = uihtml(app.HelpTab);
+            app.HTML2_2.HTMLSource = '<hr/>';
+            app.HTML2_2.Position = [37 159 566 25];
+
+            % Create HTML2_3
+            app.HTML2_3 = uihtml(app.HelpTab);
+            app.HTML2_3.HTMLSource = '<hr/>';
+            app.HTML2_3.Position = [37 79 566 25];
+
+            % Create BACKButton
+            app.BACKButton = uibutton(app.HelpTab, 'push');
+            app.BACKButton.ButtonPushedFcn = createCallbackFcn(app, @BACKButtonPushed, true);
+            app.BACKButton.BackgroundColor = [0.9412 0.9412 0.9412];
+            app.BACKButton.FontSize = 14;
+            app.BACKButton.FontWeight = 'bold';
+            app.BACKButton.FontAngle = 'italic';
+            app.BACKButton.Position = [632 29 100 26];
+            app.BACKButton.Text = 'BACK';
+
+            % Create ParametersTab
+            app.ParametersTab = uitab(app.TabGroup);
+            app.ParametersTab.AutoResizeChildren = 'off';
+            app.ParametersTab.Title = 'Parameters';
+            app.ParametersTab.BackgroundColor = [0.9412 0.9412 0.9412];
+
+            % Create DetermineSignalParametersLabel
+            app.DetermineSignalParametersLabel = uilabel(app.ParametersTab);
+            app.DetermineSignalParametersLabel.BackgroundColor = [1 1 1];
+            app.DetermineSignalParametersLabel.HorizontalAlignment = 'center';
+            app.DetermineSignalParametersLabel.FontName = 'Helvetica Neue';
+            app.DetermineSignalParametersLabel.FontSize = 24;
+            app.DetermineSignalParametersLabel.FontWeight = 'bold';
+            app.DetermineSignalParametersLabel.FontAngle = 'italic';
+            app.DetermineSignalParametersLabel.Position = [67 360 633 40];
+            app.DetermineSignalParametersLabel.Text = 'Determine Signal Parameters';
+
+            % Create sinxCheckBox
+            app.sinxCheckBox = uicheckbox(app.ParametersTab);
+            app.sinxCheckBox.ValueChangedFcn = createCallbackFcn(app, @sinxCheckBoxValueChanged, true);
+            app.sinxCheckBox.Text = '   sin x';
+            app.sinxCheckBox.FontName = 'Helvetica Neue';
+            app.sinxCheckBox.FontSize = 16;
+            app.sinxCheckBox.Position = [50 261 69 22];
+
+            % Create sinxCheckBox_2
+            app.sinxCheckBox_2 = uicheckbox(app.ParametersTab);
+            app.sinxCheckBox_2.ValueChangedFcn = createCallbackFcn(app, @sinxCheckBox_2ValueChanged, true);
+            app.sinxCheckBox_2.Text = '   sin x';
+            app.sinxCheckBox_2.FontName = 'Helvetica Neue';
+            app.sinxCheckBox_2.FontSize = 16;
+            app.sinxCheckBox_2.Position = [50 216 69 22];
+
+            % Create sinxCheckBox_3
+            app.sinxCheckBox_3 = uicheckbox(app.ParametersTab);
+            app.sinxCheckBox_3.ValueChangedFcn = createCallbackFcn(app, @sinxCheckBox_3ValueChanged, true);
+            app.sinxCheckBox_3.Text = '   sin x';
+            app.sinxCheckBox_3.FontName = 'Helvetica Neue';
+            app.sinxCheckBox_3.FontSize = 16;
+            app.sinxCheckBox_3.Position = [50 169 69 22];
+
+            % Create sinxCheckBox_4
+            app.sinxCheckBox_4 = uicheckbox(app.ParametersTab);
+            app.sinxCheckBox_4.ValueChangedFcn = createCallbackFcn(app, @sinxCheckBox_4ValueChanged, true);
+            app.sinxCheckBox_4.Text = '   sin x';
+            app.sinxCheckBox_4.FontName = 'Helvetica Neue';
+            app.sinxCheckBox_4.FontSize = 16;
+            app.sinxCheckBox_4.Position = [50 122 69 22];
+
+            % Create sinxCheckBox_5
+            app.sinxCheckBox_5 = uicheckbox(app.ParametersTab);
+            app.sinxCheckBox_5.ValueChangedFcn = createCallbackFcn(app, @sinxCheckBox_5ValueChanged, true);
+            app.sinxCheckBox_5.Text = '   sin x';
+            app.sinxCheckBox_5.FontName = 'Helvetica Neue';
+            app.sinxCheckBox_5.FontSize = 16;
+            app.sinxCheckBox_5.Position = [50 78 69 22];
+
+            % Create CANCELButton
+            app.CANCELButton = uibutton(app.ParametersTab, 'push');
+            app.CANCELButton.ButtonPushedFcn = createCallbackFcn(app, @CANCELButtonPushed, true);
+            app.CANCELButton.BackgroundColor = [0.9804 0.2353 0.2353];
+            app.CANCELButton.FontName = 'Lucida Sans';
+            app.CANCELButton.FontSize = 14;
+            app.CANCELButton.FontWeight = 'bold';
+            app.CANCELButton.FontAngle = 'italic';
+            app.CANCELButton.Position = [455 25 100 26];
+            app.CANCELButton.Text = 'CANCEL';
+
+            % Create CREATEButton
+            app.CREATEButton = uibutton(app.ParametersTab, 'push');
+            app.CREATEButton.ButtonPushedFcn = createCallbackFcn(app, @CREATEButtonPushed, true);
+            app.CREATEButton.BackgroundColor = [0.502 0.8314 0.3608];
+            app.CREATEButton.FontName = 'Lucida Sans';
+            app.CREATEButton.FontSize = 14;
+            app.CREATEButton.FontWeight = 'bold';
+            app.CREATEButton.FontAngle = 'italic';
+            app.CREATEButton.Position = [614 25 100 26];
+            app.CREATEButton.Text = 'CREATE';
+
+            % Create SlopemmyrEditFieldLabel
+            app.SlopemmyrEditFieldLabel = uilabel(app.ParametersTab);
+            app.SlopemmyrEditFieldLabel.HorizontalAlignment = 'center';
+            app.SlopemmyrEditFieldLabel.FontSize = 16;
+            app.SlopemmyrEditFieldLabel.Position = [191 314 156 22];
+            app.SlopemmyrEditFieldLabel.Text = 'Slope (mm/yr)';
+
+            % Create SlopemmyrEditField
+            app.SlopemmyrEditField = uieditfield(app.ParametersTab, 'numeric');
+            app.SlopemmyrEditField.FontSize = 18;
+            app.SlopemmyrEditField.Position = [404 312 201 24];
+
+            % Create AmplitudeLabel
+            app.AmplitudeLabel = uilabel(app.ParametersTab);
+            app.AmplitudeLabel.HorizontalAlignment = 'right';
+            app.AmplitudeLabel.FontSize = 14;
+            app.AmplitudeLabel.Position = [158 261 69 22];
+            app.AmplitudeLabel.Text = 'Amplitude';
+
+            % Create AmplitudeEditField
+            app.AmplitudeEditField = uieditfield(app.ParametersTab, 'numeric');
+            app.AmplitudeEditField.FontSize = 14;
+            app.AmplitudeEditField.Enable = 'off';
+            app.AmplitudeEditField.Position = [253 261 72 22];
+
+            % Create AmplitudeEditField_7Label
+            app.AmplitudeEditField_7Label = uilabel(app.ParametersTab);
+            app.AmplitudeEditField_7Label.HorizontalAlignment = 'right';
+            app.AmplitudeEditField_7Label.FontSize = 14;
+            app.AmplitudeEditField_7Label.Position = [158 216 69 22];
+            app.AmplitudeEditField_7Label.Text = 'Amplitude';
+
+            % Create AmplitudeEditField_2
+            app.AmplitudeEditField_2 = uieditfield(app.ParametersTab, 'numeric');
+            app.AmplitudeEditField_2.FontSize = 14;
+            app.AmplitudeEditField_2.Enable = 'off';
+            app.AmplitudeEditField_2.Position = [253 216 72 22];
+
+            % Create AmplitudeEditField_8Label
+            app.AmplitudeEditField_8Label = uilabel(app.ParametersTab);
+            app.AmplitudeEditField_8Label.HorizontalAlignment = 'right';
+            app.AmplitudeEditField_8Label.FontSize = 14;
+            app.AmplitudeEditField_8Label.Position = [158 169 69 22];
+            app.AmplitudeEditField_8Label.Text = 'Amplitude';
+
+            % Create AmplitudeEditField_3
+            app.AmplitudeEditField_3 = uieditfield(app.ParametersTab, 'numeric');
+            app.AmplitudeEditField_3.FontSize = 14;
+            app.AmplitudeEditField_3.Enable = 'off';
+            app.AmplitudeEditField_3.Position = [253 169 72 22];
+
+            % Create AmplitudeEditField_9Label
+            app.AmplitudeEditField_9Label = uilabel(app.ParametersTab);
+            app.AmplitudeEditField_9Label.HorizontalAlignment = 'right';
+            app.AmplitudeEditField_9Label.FontSize = 14;
+            app.AmplitudeEditField_9Label.Position = [158 122 69 22];
+            app.AmplitudeEditField_9Label.Text = 'Amplitude';
+
+            % Create AmplitudeEditField_4
+            app.AmplitudeEditField_4 = uieditfield(app.ParametersTab, 'numeric');
+            app.AmplitudeEditField_4.FontSize = 14;
+            app.AmplitudeEditField_4.Enable = 'off';
+            app.AmplitudeEditField_4.Position = [253 122 72 22];
+
+            % Create AmplitudeEditField_10Label
+            app.AmplitudeEditField_10Label = uilabel(app.ParametersTab);
+            app.AmplitudeEditField_10Label.HorizontalAlignment = 'right';
+            app.AmplitudeEditField_10Label.FontSize = 14;
+            app.AmplitudeEditField_10Label.Position = [158 78 69 22];
+            app.AmplitudeEditField_10Label.Text = 'Amplitude';
+
+            % Create AmplitudeEditField_5
+            app.AmplitudeEditField_5 = uieditfield(app.ParametersTab, 'numeric');
+            app.AmplitudeEditField_5.FontSize = 14;
+            app.AmplitudeEditField_5.Enable = 'off';
+            app.AmplitudeEditField_5.Position = [253 78 72 22];
+
+            % Create FrequencyEditFieldLabel
+            app.FrequencyEditFieldLabel = uilabel(app.ParametersTab);
+            app.FrequencyEditFieldLabel.HorizontalAlignment = 'right';
+            app.FrequencyEditFieldLabel.FontSize = 14;
+            app.FrequencyEditFieldLabel.Position = [367 261 71 22];
+            app.FrequencyEditFieldLabel.Text = 'Frequency';
+
+            % Create FrequencyEditField
+            app.FrequencyEditField = uieditfield(app.ParametersTab, 'numeric');
+            app.FrequencyEditField.FontSize = 14;
+            app.FrequencyEditField.Enable = 'off';
+            app.FrequencyEditField.Position = [464 261 72 22];
+
+            % Create FrequencyEditField_2Label
+            app.FrequencyEditField_2Label = uilabel(app.ParametersTab);
+            app.FrequencyEditField_2Label.HorizontalAlignment = 'right';
+            app.FrequencyEditField_2Label.FontSize = 14;
+            app.FrequencyEditField_2Label.Position = [367 216 71 22];
+            app.FrequencyEditField_2Label.Text = 'Frequency';
+
+            % Create FrequencyEditField_2
+            app.FrequencyEditField_2 = uieditfield(app.ParametersTab, 'numeric');
+            app.FrequencyEditField_2.FontSize = 14;
+            app.FrequencyEditField_2.Enable = 'off';
+            app.FrequencyEditField_2.Position = [464 216 72 22];
+
+            % Create FrequencyEditField_3Label
+            app.FrequencyEditField_3Label = uilabel(app.ParametersTab);
+            app.FrequencyEditField_3Label.HorizontalAlignment = 'right';
+            app.FrequencyEditField_3Label.FontSize = 14;
+            app.FrequencyEditField_3Label.Position = [367 169 71 22];
+            app.FrequencyEditField_3Label.Text = 'Frequency';
+
+            % Create FrequencyEditField_3
+            app.FrequencyEditField_3 = uieditfield(app.ParametersTab, 'numeric');
+            app.FrequencyEditField_3.FontSize = 14;
+            app.FrequencyEditField_3.Enable = 'off';
+            app.FrequencyEditField_3.Position = [464 169 72 22];
+
+            % Create FrequencyEditField_4Label
+            app.FrequencyEditField_4Label = uilabel(app.ParametersTab);
+            app.FrequencyEditField_4Label.HorizontalAlignment = 'right';
+            app.FrequencyEditField_4Label.FontSize = 14;
+            app.FrequencyEditField_4Label.Position = [367 122 71 22];
+            app.FrequencyEditField_4Label.Text = 'Frequency';
+
+            % Create FrequencyEditField_4
+            app.FrequencyEditField_4 = uieditfield(app.ParametersTab, 'numeric');
+            app.FrequencyEditField_4.FontSize = 14;
+            app.FrequencyEditField_4.Enable = 'off';
+            app.FrequencyEditField_4.Position = [464 122 72 22];
+
+            % Create FrequencyEditField_5Label
+            app.FrequencyEditField_5Label = uilabel(app.ParametersTab);
+            app.FrequencyEditField_5Label.HorizontalAlignment = 'right';
+            app.FrequencyEditField_5Label.FontSize = 14;
+            app.FrequencyEditField_5Label.Position = [367 78 71 22];
+            app.FrequencyEditField_5Label.Text = 'Frequency';
+
+            % Create FrequencyEditField_5
+            app.FrequencyEditField_5 = uieditfield(app.ParametersTab, 'numeric');
+            app.FrequencyEditField_5.FontSize = 14;
+            app.FrequencyEditField_5.Enable = 'off';
+            app.FrequencyEditField_5.Position = [464 78 72 22];
+
+            % Create PhaseEditFieldLabel
+            app.PhaseEditFieldLabel = uilabel(app.ParametersTab);
+            app.PhaseEditFieldLabel.HorizontalAlignment = 'right';
+            app.PhaseEditFieldLabel.FontSize = 14;
+            app.PhaseEditFieldLabel.Position = [580 261 44 22];
+            app.PhaseEditFieldLabel.Text = 'Phase';
+
+            % Create PhaseEditField
+            app.PhaseEditField = uieditfield(app.ParametersTab, 'numeric');
+            app.PhaseEditField.FontSize = 14;
+            app.PhaseEditField.Enable = 'off';
+            app.PhaseEditField.Position = [650 261 72 22];
+
+            % Create PhaseEditField_2Label
+            app.PhaseEditField_2Label = uilabel(app.ParametersTab);
+            app.PhaseEditField_2Label.HorizontalAlignment = 'right';
+            app.PhaseEditField_2Label.FontSize = 14;
+            app.PhaseEditField_2Label.Position = [580 216 44 22];
+            app.PhaseEditField_2Label.Text = 'Phase';
+
+            % Create PhaseEditField_2
+            app.PhaseEditField_2 = uieditfield(app.ParametersTab, 'numeric');
+            app.PhaseEditField_2.FontSize = 14;
+            app.PhaseEditField_2.Enable = 'off';
+            app.PhaseEditField_2.Position = [650 216 72 22];
+
+            % Create PhaseEditField_3Label
+            app.PhaseEditField_3Label = uilabel(app.ParametersTab);
+            app.PhaseEditField_3Label.HorizontalAlignment = 'right';
+            app.PhaseEditField_3Label.FontSize = 14;
+            app.PhaseEditField_3Label.Position = [580 169 44 22];
+            app.PhaseEditField_3Label.Text = 'Phase';
+
+            % Create PhaseEditField_3
+            app.PhaseEditField_3 = uieditfield(app.ParametersTab, 'numeric');
+            app.PhaseEditField_3.FontSize = 14;
+            app.PhaseEditField_3.Enable = 'off';
+            app.PhaseEditField_3.Position = [650 169 72 22];
+
+            % Create PhaseEditField_4Label
+            app.PhaseEditField_4Label = uilabel(app.ParametersTab);
+            app.PhaseEditField_4Label.HorizontalAlignment = 'right';
+            app.PhaseEditField_4Label.FontSize = 14;
+            app.PhaseEditField_4Label.Position = [580 122 44 22];
+            app.PhaseEditField_4Label.Text = 'Phase';
+
+            % Create PhaseEditField_4
+            app.PhaseEditField_4 = uieditfield(app.ParametersTab, 'numeric');
+            app.PhaseEditField_4.FontSize = 14;
+            app.PhaseEditField_4.Enable = 'off';
+            app.PhaseEditField_4.Position = [650 122 72 22];
+
+            % Create PhaseEditField_5Label
+            app.PhaseEditField_5Label = uilabel(app.ParametersTab);
+            app.PhaseEditField_5Label.HorizontalAlignment = 'right';
+            app.PhaseEditField_5Label.FontSize = 14;
+            app.PhaseEditField_5Label.Position = [580 78 44 22];
+            app.PhaseEditField_5Label.Text = 'Phase';
+
+            % Create PhaseEditField_5
+            app.PhaseEditField_5 = uieditfield(app.ParametersTab, 'numeric');
+            app.PhaseEditField_5.FontSize = 14;
+            app.PhaseEditField_5.Enable = 'off';
+            app.PhaseEditField_5.Position = [650 78 72 22];
+
+            % Create Button_2
+            app.Button_2 = uibutton(app.ParametersTab, 'push');
+            app.Button_2.ButtonPushedFcn = createCallbackFcn(app, @ButtonPushed, true);
+            app.Button_2.Icon = 'help.png';
+            app.Button_2.Tooltip = {'Help'};
+            app.Button_2.Position = [27 369 24 23];
+            app.Button_2.Text = '';
+
+            % Create CreatedSignalsTab
+            app.CreatedSignalsTab = uitab(app.TabGroup);
+            app.CreatedSignalsTab.AutoResizeChildren = 'off';
+            app.CreatedSignalsTab.Title = 'Created Signals';
+
+            % Create CreatedSignalsLabel
+            app.CreatedSignalsLabel = uilabel(app.CreatedSignalsTab);
+            app.CreatedSignalsLabel.BackgroundColor = [1 1 1];
+            app.CreatedSignalsLabel.HorizontalAlignment = 'center';
+            app.CreatedSignalsLabel.FontName = 'Helvetica Neue';
+            app.CreatedSignalsLabel.FontSize = 24;
+            app.CreatedSignalsLabel.FontWeight = 'bold';
+            app.CreatedSignalsLabel.FontAngle = 'italic';
+            app.CreatedSignalsLabel.Position = [67 359 633 40];
+            app.CreatedSignalsLabel.Text = 'Created Signals';
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.CreatedSignalsTab);
+            title(app.UIAxes, 'Time Series')
+            xlabel(app.UIAxes, 'Time (days)')
+            ylabel(app.UIAxes, 'Amplitude (m)')
+            app.UIAxes.PlotBoxAspectRatio = [1.13574660633484 1 1];
+            app.UIAxes.Box = 'on';
+            app.UIAxes.Position = [50 68 300 277];
+
+            % Create UIAxes2
+            app.UIAxes2 = uiaxes(app.CreatedSignalsTab);
+            title(app.UIAxes2, 'Power Spectrum')
+            xlabel(app.UIAxes2, 'Frequency (cpd)')
+            ylabel(app.UIAxes2, 'Power per cycle per second (m^2 / cpd)')
+            app.UIAxes2.PlotBoxAspectRatio = [1.13574660633484 1 1];
+            app.UIAxes2.Box = 'on';
+            app.UIAxes2.Position = [418 70 300 277];
+
+            % Create CANCELButton_2
+            app.CANCELButton_2 = uibutton(app.CreatedSignalsTab, 'push');
+            app.CANCELButton_2.ButtonPushedFcn = createCallbackFcn(app, @CANCELButtonPushed, true);
+            app.CANCELButton_2.BackgroundColor = [0.9804 0.2353 0.2353];
+            app.CANCELButton_2.FontName = 'Lucida Sans';
+            app.CANCELButton_2.FontSize = 14;
+            app.CANCELButton_2.FontWeight = 'bold';
+            app.CANCELButton_2.FontAngle = 'italic';
+            app.CANCELButton_2.Position = [334 17 100 26];
+            app.CANCELButton_2.Text = 'CANCEL';
+
+            % Create NEXTButton
+            app.NEXTButton = uibutton(app.CreatedSignalsTab, 'push');
+            app.NEXTButton.ButtonPushedFcn = createCallbackFcn(app, @NEXTButtonPushed, true);
+            app.NEXTButton.BackgroundColor = [0.498 0.8314 0.3569];
+            app.NEXTButton.FontName = 'Lucida Sans';
+            app.NEXTButton.FontSize = 14;
+            app.NEXTButton.FontWeight = 'bold';
+            app.NEXTButton.FontAngle = 'italic';
+            app.NEXTButton.Position = [518 17 100 26];
+            app.NEXTButton.Text = 'NEXT';
+
+            % Create GOBACKButton
+            app.GOBACKButton = uibutton(app.CreatedSignalsTab, 'push');
+            app.GOBACKButton.ButtonPushedFcn = createCallbackFcn(app, @GOBACKButtonPushed, true);
+            app.GOBACKButton.BackgroundColor = [0.8588 0.8588 0.8588];
+            app.GOBACKButton.FontName = 'Lucida Sans';
+            app.GOBACKButton.FontSize = 14;
+            app.GOBACKButton.FontWeight = 'bold';
+            app.GOBACKButton.FontAngle = 'italic';
+            app.GOBACKButton.Position = [150 17 100 26];
+            app.GOBACKButton.Text = 'GO BACK';
+
+            % Create Button_3
+            app.Button_3 = uibutton(app.CreatedSignalsTab, 'push');
+            app.Button_3.Icon = 'help.png';
+            app.Button_3.Tooltip = {'Help'};
+            app.Button_3.Position = [27 368 24 23];
+            app.Button_3.Text = '';
+
+            % Create FilterParamsTab
+            app.FilterParamsTab = uitab(app.TabGroup);
+            app.FilterParamsTab.AutoResizeChildren = 'off';
+            app.FilterParamsTab.Title = 'Filter Params';
+
+            % Create FilterSignalParametersLabel
+            app.FilterSignalParametersLabel = uilabel(app.FilterParamsTab);
+            app.FilterSignalParametersLabel.BackgroundColor = [1 1 1];
+            app.FilterSignalParametersLabel.HorizontalAlignment = 'center';
+            app.FilterSignalParametersLabel.FontName = 'Helvetica Neue';
+            app.FilterSignalParametersLabel.FontSize = 24;
+            app.FilterSignalParametersLabel.FontWeight = 'bold';
+            app.FilterSignalParametersLabel.FontAngle = 'italic';
+            app.FilterSignalParametersLabel.Position = [67 356 633 40];
+            app.FilterSignalParametersLabel.Text = 'Filter Signal Parameters';
+
+            % Create TimescaleYearsEditFieldLabel
+            app.TimescaleYearsEditFieldLabel = uilabel(app.FilterParamsTab);
+            app.TimescaleYearsEditFieldLabel.HorizontalAlignment = 'center';
+            app.TimescaleYearsEditFieldLabel.FontSize = 16;
+            app.TimescaleYearsEditFieldLabel.Position = [149 266 173 22];
+            app.TimescaleYearsEditFieldLabel.Text = 'Timescale (Years)';
+
+            % Create TimescaleYearsEditField
+            app.TimescaleYearsEditField = uieditfield(app.FilterParamsTab, 'numeric');
+            app.TimescaleYearsEditField.FontSize = 16;
+            app.TimescaleYearsEditField.Tooltip = {'If no amount of years entered; the default value is 1 year. '};
+            app.TimescaleYearsEditField.Position = [377 266 238 22];
+
+            % Create CANCELButton_3
+            app.CANCELButton_3 = uibutton(app.FilterParamsTab, 'push');
+            app.CANCELButton_3.ButtonPushedFcn = createCallbackFcn(app, @CANCELButtonPushed, true);
+            app.CANCELButton_3.BackgroundColor = [0.9804 0.2353 0.2353];
+            app.CANCELButton_3.FontName = 'Lucida Sans';
+            app.CANCELButton_3.FontSize = 14;
+            app.CANCELButton_3.FontWeight = 'bold';
+            app.CANCELButton_3.FontAngle = 'italic';
+            app.CANCELButton_3.Position = [333 18 100 26];
+            app.CANCELButton_3.Text = 'CANCEL';
+
+            % Create FILTERButton
+            app.FILTERButton = uibutton(app.FilterParamsTab, 'push');
+            app.FILTERButton.ButtonPushedFcn = createCallbackFcn(app, @FILTERButtonPushed, true);
+            app.FILTERButton.BackgroundColor = [0.498 0.8314 0.3569];
+            app.FILTERButton.FontName = 'Lucida Sans';
+            app.FILTERButton.FontSize = 14;
+            app.FILTERButton.FontWeight = 'bold';
+            app.FILTERButton.FontAngle = 'italic';
+            app.FILTERButton.Position = [517 18 100 26];
+            app.FILTERButton.Text = 'FILTER';
+
+            % Create GOBACKButton_2
+            app.GOBACKButton_2 = uibutton(app.FilterParamsTab, 'push');
+            app.GOBACKButton_2.ButtonPushedFcn = createCallbackFcn(app, @GOBACKButton_2Pushed, true);
+            app.GOBACKButton_2.BackgroundColor = [0.8588 0.8588 0.8588];
+            app.GOBACKButton_2.FontName = 'Lucida Sans';
+            app.GOBACKButton_2.FontSize = 14;
+            app.GOBACKButton_2.FontWeight = 'bold';
+            app.GOBACKButton_2.FontAngle = 'italic';
+            app.GOBACKButton_2.Position = [149 18 100 26];
+            app.GOBACKButton_2.Text = 'GO BACK';
+
+            % Create SelectaFilterLabel
+            app.SelectaFilterLabel = uilabel(app.FilterParamsTab);
+            app.SelectaFilterLabel.BackgroundColor = [1 1 1];
+            app.SelectaFilterLabel.HorizontalAlignment = 'center';
+            app.SelectaFilterLabel.FontSize = 15;
+            app.SelectaFilterLabel.Position = [133 177 131 29];
+            app.SelectaFilterLabel.Text = 'Select a Filter';
+
+            % Create BoxcarFilterCheckBox
+            app.BoxcarFilterCheckBox = uicheckbox(app.FilterParamsTab);
+            app.BoxcarFilterCheckBox.ValueChangedFcn = createCallbackFcn(app, @BoxcarFilterCheckBoxValueChanged, true);
+            app.BoxcarFilterCheckBox.Text = '     Boxcar Filter';
+            app.BoxcarFilterCheckBox.FontSize = 15;
+            app.BoxcarFilterCheckBox.Position = [157 140 128 22];
+
+            % Create SincFilterCheckBox
+            app.SincFilterCheckBox = uicheckbox(app.FilterParamsTab);
+            app.SincFilterCheckBox.ValueChangedFcn = createCallbackFcn(app, @SincFilterCheckBoxValueChanged, true);
+            app.SincFilterCheckBox.Text = '     Sinc Filter';
+            app.SincFilterCheckBox.FontSize = 15;
+            app.SincFilterCheckBox.Position = [157 105 110 22];
+
+            % Create SelectaSeriesLabel
+            app.SelectaSeriesLabel = uilabel(app.FilterParamsTab);
+            app.SelectaSeriesLabel.BackgroundColor = [1 1 1];
+            app.SelectaSeriesLabel.HorizontalAlignment = 'center';
+            app.SelectaSeriesLabel.FontSize = 15;
+            app.SelectaSeriesLabel.Position = [478 177 139 29];
+            app.SelectaSeriesLabel.Text = 'Select a Series';
+
+            % Create TimeSeriesCheckBox
+            app.TimeSeriesCheckBox = uicheckbox(app.FilterParamsTab);
+            app.TimeSeriesCheckBox.ValueChangedFcn = createCallbackFcn(app, @TimeSeriesCheckBoxValueChanged, true);
+            app.TimeSeriesCheckBox.Text = '     Time Series';
+            app.TimeSeriesCheckBox.FontSize = 15;
+            app.TimeSeriesCheckBox.Position = [510 140 121 22];
+
+            % Create PowerSpectrumCheckBox
+            app.PowerSpectrumCheckBox = uicheckbox(app.FilterParamsTab);
+            app.PowerSpectrumCheckBox.ValueChangedFcn = createCallbackFcn(app, @PowerSpectrumCheckBoxValueChanged, true);
+            app.PowerSpectrumCheckBox.Text = '     Power Spectrum';
+            app.PowerSpectrumCheckBox.FontSize = 15;
+            app.PowerSpectrumCheckBox.Position = [510 105 155 22];
+
+            % Create Button_4
+            app.Button_4 = uibutton(app.FilterParamsTab, 'push');
+            app.Button_4.Icon = 'help.png';
+            app.Button_4.Tooltip = {'Help'};
+            app.Button_4.Position = [26 365 24 23];
+            app.Button_4.Text = '';
+
+            % Create Label
+            app.Label = uilabel(app.FilterParamsTab);
+            app.Label.Position = [174 237 457 22];
+            app.Label.Text = 'Note: Timescale must be in the range of the amount years entered in the frequency';
+
+            % Create FilteredSignalsTab
+            app.FilteredSignalsTab = uitab(app.TabGroup);
+            app.FilteredSignalsTab.AutoResizeChildren = 'off';
+            app.FilteredSignalsTab.Title = 'Filtered Signals';
+
+            % Create FilteredSignalsLabel
+            app.FilteredSignalsLabel = uilabel(app.FilteredSignalsTab);
+            app.FilteredSignalsLabel.BackgroundColor = [1 1 1];
+            app.FilteredSignalsLabel.HorizontalAlignment = 'center';
+            app.FilteredSignalsLabel.FontName = 'Helvetica Neue';
+            app.FilteredSignalsLabel.FontSize = 24;
+            app.FilteredSignalsLabel.FontWeight = 'bold';
+            app.FilteredSignalsLabel.FontAngle = 'italic';
+            app.FilteredSignalsLabel.Position = [67 361 633 38];
+            app.FilteredSignalsLabel.Text = 'Filtered Signals';
+
+            % Create UIAxes_2
+            app.UIAxes_2 = uiaxes(app.FilteredSignalsTab);
+            title(app.UIAxes_2, 'Time Series')
+            xlabel(app.UIAxes_2, 'Time (days)')
+            ylabel(app.UIAxes_2, 'Amplitude')
+            app.UIAxes_2.PlotBoxAspectRatio = [1.13574660633484 1 1];
+            app.UIAxes_2.Box = 'on';
+            app.UIAxes_2.Position = [50 68 300 277];
+
+            % Create UIAxes2_2
+            app.UIAxes2_2 = uiaxes(app.FilteredSignalsTab);
+            title(app.UIAxes2_2, 'Power Spectrum')
+            xlabel(app.UIAxes2_2, 'Cycles per Day')
+            ylabel(app.UIAxes2_2, 'Frequency')
+            app.UIAxes2_2.PlotBoxAspectRatio = [1.13574660633484 1 1];
+            app.UIAxes2_2.Box = 'on';
+            app.UIAxes2_2.Position = [418 70 300 277];
+
+            % Create CANCELButton_4
+            app.CANCELButton_4 = uibutton(app.FilteredSignalsTab, 'push');
+            app.CANCELButton_4.ButtonPushedFcn = createCallbackFcn(app, @CANCELButtonPushed, true);
+            app.CANCELButton_4.BackgroundColor = [0.9804 0.2353 0.2353];
+            app.CANCELButton_4.FontName = 'Lucida Sans';
+            app.CANCELButton_4.FontSize = 14;
+            app.CANCELButton_4.FontWeight = 'bold';
+            app.CANCELButton_4.FontAngle = 'italic';
+            app.CANCELButton_4.Position = [334 17 100 26];
+            app.CANCELButton_4.Text = 'CANCEL';
+
+            % Create NEXTButton_2
+            app.NEXTButton_2 = uibutton(app.FilteredSignalsTab, 'push');
+            app.NEXTButton_2.ButtonPushedFcn = createCallbackFcn(app, @NEXTButton_2Pushed, true);
+            app.NEXTButton_2.BackgroundColor = [0.498 0.8314 0.3569];
+            app.NEXTButton_2.FontName = 'Lucida Sans';
+            app.NEXTButton_2.FontSize = 14;
+            app.NEXTButton_2.FontWeight = 'bold';
+            app.NEXTButton_2.FontAngle = 'italic';
+            app.NEXTButton_2.Position = [518 17 100 26];
+            app.NEXTButton_2.Text = 'NEXT';
+
+            % Create GOBACKButton_3
+            app.GOBACKButton_3 = uibutton(app.FilteredSignalsTab, 'push');
+            app.GOBACKButton_3.ButtonPushedFcn = createCallbackFcn(app, @GOBACKButton_3Pushed, true);
+            app.GOBACKButton_3.BackgroundColor = [0.8588 0.8588 0.8588];
+            app.GOBACKButton_3.FontName = 'Lucida Sans';
+            app.GOBACKButton_3.FontSize = 14;
+            app.GOBACKButton_3.FontWeight = 'bold';
+            app.GOBACKButton_3.FontAngle = 'italic';
+            app.GOBACKButton_3.Position = [150 17 100 26];
+            app.GOBACKButton_3.Text = 'GO BACK';
+
+            % Create Button_5
+            app.Button_5 = uibutton(app.FilteredSignalsTab, 'push');
+            app.Button_5.Icon = 'help.png';
+            app.Button_5.Tooltip = {'Help'};
+            app.Button_5.Position = [27 369 24 23];
+            app.Button_5.Text = '';
+
+            % Create SignalAnalysisTab
+            app.SignalAnalysisTab = uitab(app.TabGroup);
+            app.SignalAnalysisTab.Title = 'Signal Analysis';
+
+            % Create AnalyzingtheFilteredSignalsLabel
+            app.AnalyzingtheFilteredSignalsLabel = uilabel(app.SignalAnalysisTab);
+            app.AnalyzingtheFilteredSignalsLabel.BackgroundColor = [1 1 1];
+            app.AnalyzingtheFilteredSignalsLabel.HorizontalAlignment = 'center';
+            app.AnalyzingtheFilteredSignalsLabel.FontName = 'Helvetica Neue';
+            app.AnalyzingtheFilteredSignalsLabel.FontSize = 24;
+            app.AnalyzingtheFilteredSignalsLabel.FontWeight = 'bold';
+            app.AnalyzingtheFilteredSignalsLabel.FontAngle = 'italic';
+            app.AnalyzingtheFilteredSignalsLabel.Position = [67 356 633 40];
+            app.AnalyzingtheFilteredSignalsLabel.Text = 'Analyzing the Filtered Signals';
+
+            % Create HTML4
+            app.HTML4 = uihtml(app.SignalAnalysisTab);
+            app.HTML4.HTMLSource = '<p style="font-family: Helvetica; font-size: 15px"> During the process of the application, you could observe the generation of the time series and the power spectrum; based on the data entered in the beginning of the process. This signals are generated by two functions: <br/>&emsp;&emsp;<span style="font-weight: 600"> amplitude * sin(frequency + phase) </span> for the time series <br/>&emsp;&emsp; <span style="font-weight: 600">amplitude * sin ((1/frequency) + phase)</span> for the power spectrum<br/><br/> After deciding how many years to filter the signals and which series and filter, you wanted to use; the signals underwent a process of reducing frequency. Since to estimate the value of SLR the only viable information is in the low frequency, we need to apply low passband filters, such as the Sinc Filter and the Boxcar Filter.<br/><br/> After filtering the data, in the filtered graphs if applied to the time series: the blue signal is the low frequency signal, the red lines are the limits ofwhere the data in the signal is valid to calculate the SLR trend. Finally, the yellow line is the linear regression that provides the value of the SLR trend. If applying the filters in the power spectrum, the green line is the cutoff of the signals, the valid data is on the left of the line; and the red signal is the low frequency signal.</p>';
+            app.HTML4.Position = [92 50 585 293];
+
+            % Create FINISHButton
+            app.FINISHButton = uibutton(app.SignalAnalysisTab, 'push');
+            app.FINISHButton.ButtonPushedFcn = createCallbackFcn(app, @FINISHButtonPushed, true);
+            app.FINISHButton.BackgroundColor = [0.3922 0.8314 0.0745];
+            app.FINISHButton.FontSize = 14;
+            app.FINISHButton.FontWeight = 'bold';
+            app.FINISHButton.FontAngle = 'italic';
+            app.FINISHButton.Position = [546 17 100 26];
+            app.FINISHButton.Text = 'FINISH';
+
+            % Create GOBACKButton_4
+            app.GOBACKButton_4 = uibutton(app.SignalAnalysisTab, 'push');
+            app.GOBACKButton_4.ButtonPushedFcn = createCallbackFcn(app, @GOBACKButton_4Pushed, true);
+            app.GOBACKButton_4.BackgroundColor = [0.8588 0.8588 0.8588];
+            app.GOBACKButton_4.FontName = 'Lucida Sans';
+            app.GOBACKButton_4.FontSize = 14;
+            app.GOBACKButton_4.FontWeight = 'bold';
+            app.GOBACKButton_4.FontAngle = 'italic';
+            app.GOBACKButton_4.Position = [149 17 100 26];
+            app.GOBACKButton_4.Text = 'GO BACK';
+
+            % Show the figure after all components are created
+            app.SLRSignalAnalysisUIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = tesinaGUI
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.SLRSignalAnalysisUIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.SLRSignalAnalysisUIFigure)
+        end
+    end
+end
